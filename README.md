@@ -40,7 +40,6 @@ This project demonstrates secure authentication, wallet management, money transf
 ---
 
 ## 📘 API Documentation (Swagger)
-http://localhost:8080/swagger-ui.html
 
-Swagger UI available at:
+Swagger UI available at:  http://localhost:8080/swagger-ui.html
 
