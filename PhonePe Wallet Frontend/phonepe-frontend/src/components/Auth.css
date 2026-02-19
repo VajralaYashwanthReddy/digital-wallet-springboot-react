@@ -1,0 +1,35 @@
+.card {
+  width: 360px;
+  margin: 120px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: #5b4ddb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #493acb;
+}
+
+p {
+  margin-top: 15px;
+  color: blue;
+  cursor: pointer;
+}
