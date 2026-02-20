@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
@@ -21,55 +22,48 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                // Disable CSRF completely
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+                // Enable CORS
+                .cors(Customizer.withDefaults())
+
+                // Authorization rules
                 .authorizeHttpRequests(auth -> auth
 
-                        // ✅ Allow Swagger
+                        // Swagger
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        // Users
-                        .requestMatchers(
-                                "/api/users/**"
-                        ).permitAll()
+                        // Allow ALL project APIs (for now)
+                        .requestMatchers("/api/**").permitAll()
 
-                        // Wallet
-                        .requestMatchers(
-                                "/api/wallet/**"
-                        ).permitAll()
-
-                        // Transactions
-                        .requestMatchers(
-                                "/api/transaction/**"
-                        ).permitAll()
-
-                        // 🔒 Secure all other endpoints
+                        // Any other request requires authentication
                         .anyRequest().authenticated()
                 )
+
+                // Disable default login popup
                 .httpBasic(httpBasic -> httpBasic.disable());
 
         return http.build();
     }
 
-    // ✅ Password Encoder Bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ CORS Configuration for React
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("*")); // Allow all for testing
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
